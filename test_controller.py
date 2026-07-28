@@ -4,7 +4,7 @@ from pybricks.parameters import Button, Port
 from pybricks.messaging import BLERadio
 
 hub = PrimeHub()
-s_l = ForceSensor(Port.A)
+s_l = ForceSensor(Port.F)
 s_r = ForceSensor(Port.B)
 f_b = "n"
 ble = BLERadio(broadcast_channel=1)
@@ -14,18 +14,22 @@ while True:
     elif Button.RIGHT in hub.buttons.pressed():
         f_b = "b"
     if f_b == "f":
-        if s_l.touched() and s_r.touched():
+        if s_l.pressed() and s_r.pressed():
             ble.broadcast("Gerade")
-        elif s_l.touched():
+        elif s_l.pressed():
             ble.broadcast("Leftf")
-        elif s_r.touched():
+        elif s_r.pressed():
             ble.broadcast("Rightf")
+        elif not s_l.pressed() or not s_r.pressed():
+            ble.broadcast("nothing")
     elif f_b == "b":
-        if s_l.touched() and s_r.touched():
+        if s_l.pressed() and s_r.pressed():
             ble.broadcast("Zueruc")
-        elif s_l.touched():
+        elif s_l.pressed():
             ble.broadcast("Leftb")
-        elif s_r.touched():
+        elif s_r.pressed():
             ble.broadcast("Rightb")
-    elif f_b == "b" and (s_l.touched() or s_r.touched()):
+        elif not s_l.pressed() or not s_r.pressed():
+            ble.broadcast("nothing")
+    elif f_b == "b" and (s_l.pressed() or s_r.pressed()):
         print("You first have to select a direction")
